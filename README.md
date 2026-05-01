@@ -37,75 +37,30 @@ graph TD
 
 ### Detailed Logic Flow
 
-┌──────────────────────────────────────────────────────────────────────┐
-│                         USER (you)                                   │
-│             pastes an error log / stack trace                        │
-└───────────────────────────────┬──────────────────────────────────────┘
-                                │
-                                ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│  ENTRY POINT                                                         │
-│  • CLI:        scripts/query.py "error text"                         │
-│  • UI:         app.py  (Streamlit, Phase 6)                          │
-└───────────────────────────────┬──────────────────────────────────────┘
-                                │
-                                ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│  src/pipeline.py    answer(query)                                    │
-│  Orchestrates: parse → embed → retrieve → rank → generate            │
-└───────────────────────────────┬──────────────────────────────────────┘
-                                │
-        ┌───────────────────────┼───────────────────────┐
-        │                       │                       │
-        ▼                       ▼                       ▼
-┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐
-│ src/parser.py    │  │ src/embedder.py  │  │  data/incidents.json │
-│ [Phase 3]        │  │                  │  │  (knowledge base)    │
-│ raw log line  →  │  │ text  →  vector  │  │  12 seed incidents   │
-│ {service,error_  │  │ SentenceTrans-   │  │  {error,root_cause,  │
-│  type,severity}  │  │ formers MiniLM   │  │   fix,tags,...}      │
-└──────────────────┘  └────────┬─────────┘  └──────────┬───────────┘
-                               │                       │
-                               │   (at index time, the dataset is
-                               │    embedded ONCE by build_index.py)
-                               ▼                       ▼
-                    ┌─────────────────────────────────────┐
-                    │  src/vector_store.py    FAISS       │
-                    │  data/vector_store/index.faiss      │
-                    │  data/vector_store/metadata.json    │
-                    └─────────────────┬───────────────────┘
-                                      │
-                                      ▼
-                    ┌─────────────────────────────────────┐
-                    │  src/retriever.py                   │
-                    │  Phase 1: semantic top-K            │
-                    │  Phase 2: hybrid (BM25 + semantic)  │
-                    └─────────────────┬───────────────────┘
-                                      │
-                                      ▼
-                    ┌─────────────────────────────────────┐
-                    │  src/ranker.py        [Phase 4]     │
-                    │  score = 0.6*sim + 0.2*tag + 0.2*recency │
-                    │  + confidence %                     │
-                    └─────────────────┬───────────────────┘
-                                      │
-                                      ▼
-                    ┌─────────────────────────────────────┐
-                    │  src/llm.py    generate()           │
-                    │  prompt = template + retrieved ctx  │
-                    │           ↓                         │
-                    │     Ollama (localhost:11434)        │
-                    │     llama3.1:8b  / phi3:mini        │
-                    └─────────────────┬───────────────────┘
-                                      │
-                                      ▼
-                    ┌─────────────────────────────────────┐
-                    │  Response to user:                  │
-                    │   • Likely Cause                    │
-                    │   • Suggested Fix (bullets)         │
-                    │   • Top-K retrieved incidents       │
-                    │   • Confidence %  [Phase 4]         │
-                    └─────────────────────────────────────┘
+```mermaid
+flowchart TD
+    User([User]) -->|Pastes Error Log| Entry[FastAPI server.py / query.py]
+    
+    Entry -->|query| Pipeline[src/pipeline.py<br/><i>answer() Orchestrator</i>]
+    
+    subgraph "Phase 1: Parse & Embed"
+        Pipeline --> Parser[src/parser.py<br/><i>Extracts fields: service, severity</i>]
+        Pipeline --> Embedder[src/embedder.py<br/><i>SentenceTransformers</i>]
+    end
+    
+    subgraph "Phase 2: Retrieve & Rank"
+        Embedder --> VectorStore[(FAISS Vector Store<br/><i>data/vector_store/</i>)]
+        VectorStore --> Retriever[src/retriever.py<br/><i>Semantic + BM25 Hybrid</i>]
+        Retriever --> Ranker[src/ranker.py<br/><i>Calculates Score & Confidence</i>]
+    end
+    
+    subgraph "Phase 3: Generate Response"
+        Ranker --> LLM[src/llm.py<br/><i>Constructs Prompt</i>]
+        LLM -.->|Local HTTP API| Ollama((Ollama<br/><i>llama3.1 / phi3</i>))
+    end
+    
+    LLM -->|Returns JSON/Text| Output[Response:<br/>• Likely Cause<br/>• Suggested Fix<br/>• Retrieved Incidents<br/>• Confidence %]
+    Output --> User
 ```
 
 ### Index-build flow (run once, then again whenever you add incidents)
