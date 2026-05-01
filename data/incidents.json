@@ -1,0 +1,122 @@
+[
+  {
+    "id": "INC-001",
+    "error": "NullPointerException in PaymentService at processPayment line 45",
+    "root_cause": "User object was null when payment was triggered from guest checkout flow",
+    "fix": "Add null validation for user before processing payment; redirect guests to login",
+    "tags": ["backend", "java", "payments", "npe"],
+    "service": "PaymentService",
+    "severity": "ERROR",
+    "timestamp": "2025-09-12T10:24:00Z"
+  },
+  {
+    "id": "INC-002",
+    "error": "Connection refused: DB pool exhausted on OrderService",
+    "root_cause": "Long-running queries blocked all 20 connections in the pool during sale event",
+    "fix": "Increase pool size to 50, add query timeout of 5s, add slow-query logging",
+    "tags": ["backend", "database", "postgres", "performance"],
+    "service": "OrderService",
+    "severity": "CRITICAL",
+    "timestamp": "2025-10-03T14:11:00Z"
+  },
+  {
+    "id": "INC-003",
+    "error": "401 Unauthorized from /api/v2/users — token validation failing",
+    "root_cause": "JWT signing key rotated but auth-service was not redeployed with new key",
+    "fix": "Redeploy auth-service; add health check that verifies key version matches secret manager",
+    "tags": ["auth", "jwt", "deployment"],
+    "service": "AuthService",
+    "severity": "ERROR",
+    "timestamp": "2025-10-20T08:02:00Z"
+  },
+  {
+    "id": "INC-004",
+    "error": "OutOfMemoryError: Java heap space in ReportGenerator",
+    "root_cause": "Loading entire 2GB CSV into memory before streaming to client",
+    "fix": "Switch to streaming CSV writer; process rows in batches of 1000",
+    "tags": ["backend", "java", "memory", "reports"],
+    "service": "ReportGenerator",
+    "severity": "CRITICAL",
+    "timestamp": "2025-11-01T19:45:00Z"
+  },
+  {
+    "id": "INC-005",
+    "error": "TypeError: Cannot read property 'map' of undefined in ProductList.jsx",
+    "root_cause": "API returned 204 No Content but frontend assumed array response",
+    "fix": "Default to empty array when response body is empty; add response shape validation",
+    "tags": ["frontend", "react", "javascript"],
+    "service": "Storefront",
+    "severity": "WARN",
+    "timestamp": "2025-11-15T11:30:00Z"
+  },
+  {
+    "id": "INC-006",
+    "error": "Kafka consumer lag spiking on inventory-updates topic",
+    "root_cause": "Consumer group rebalance triggered by long GC pause on one pod",
+    "fix": "Tune G1GC pause target; raise session.timeout.ms to 45s; add GC alerting",
+    "tags": ["kafka", "infra", "performance"],
+    "service": "InventoryConsumer",
+    "severity": "WARN",
+    "timestamp": "2025-12-02T03:18:00Z"
+  },
+  {
+    "id": "INC-007",
+    "error": "SSLHandshakeException calling third-party shipping API",
+    "root_cause": "Vendor rotated their certificate chain, our truststore did not include the new intermediate CA",
+    "fix": "Update truststore with new CA bundle; subscribe to vendor cert-rotation notifications",
+    "tags": ["network", "ssl", "integration"],
+    "service": "ShippingClient",
+    "severity": "ERROR",
+    "timestamp": "2025-12-18T16:55:00Z"
+  },
+  {
+    "id": "INC-008",
+    "error": "Duplicate key violation on orders_pkey during checkout retry",
+    "root_cause": "Client retried POST /orders without idempotency key; same order inserted twice",
+    "fix": "Require Idempotency-Key header; dedupe on it server-side for 24h",
+    "tags": ["backend", "database", "idempotency"],
+    "service": "CheckoutService",
+    "severity": "ERROR",
+    "timestamp": "2026-01-09T22:07:00Z"
+  },
+  {
+    "id": "INC-009",
+    "error": "Redis OOM — used_memory exceeded maxmemory on session cache",
+    "root_cause": "Session TTL was set to 30 days instead of 30 minutes after a config typo",
+    "fix": "Correct TTL to 1800s; add maxmemory-policy allkeys-lru as safety net",
+    "tags": ["redis", "cache", "config"],
+    "service": "SessionStore",
+    "severity": "CRITICAL",
+    "timestamp": "2026-02-14T07:21:00Z"
+  },
+  {
+    "id": "INC-010",
+    "error": "504 Gateway Timeout from /search endpoint under load",
+    "root_cause": "Elasticsearch query missing index hint, fell back to full scan on 50M docs",
+    "fix": "Add explicit index; cap query timeout to 3s; return partial results on timeout",
+    "tags": ["search", "elasticsearch", "performance"],
+    "service": "SearchAPI",
+    "severity": "ERROR",
+    "timestamp": "2026-03-22T13:40:00Z"
+  },
+  {
+    "id": "INC-011",
+    "error": "CORS policy blocked request from app.example.com to api.example.com",
+    "root_cause": "New marketing subdomain not added to allowed origins after domain split",
+    "fix": "Add app.example.com to ALLOWED_ORIGINS env var; document origin update runbook",
+    "tags": ["frontend", "cors", "config"],
+    "service": "APIGateway",
+    "severity": "ERROR",
+    "timestamp": "2026-04-05T09:12:00Z"
+  },
+  {
+    "id": "INC-012",
+    "error": "Disk space at 98% on logging-node-3, log shipping halted",
+    "root_cause": "Log rotation cron failed silently after node was reimaged without crontab restore",
+    "fix": "Restore cron entry; move log rotation to systemd timer with alerting on failure",
+    "tags": ["infra", "logging", "ops"],
+    "service": "LoggingPipeline",
+    "severity": "WARN",
+    "timestamp": "2026-04-18T02:50:00Z"
+  }
+]

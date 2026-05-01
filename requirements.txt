@@ -1,0 +1,24 @@
+# Core
+python-dotenv>=1.0
+
+# Embeddings & Vector DB
+sentence-transformers>=2.7
+faiss-cpu>=1.8
+
+# LLM (pick one path; default = local Ollama via openai-compatible client)
+openai>=1.30
+anthropic>=0.25
+
+# Retrieval helpers
+rank-bm25>=0.2.2
+numpy>=1.26,<3
+
+# API server (React frontend)
+fastapi>=0.110
+uvicorn>=0.29
+
+# UI (Phase 6 - alternative Streamlit)
+streamlit>=1.34
+
+# Eval (Phase 7)
+scikit-learn>=1.4

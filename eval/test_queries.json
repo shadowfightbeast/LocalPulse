@@ -1,0 +1,50 @@
+[
+  {
+    "query": "NullPointerException in payment service line 45",
+    "expected_id": "INC-001"
+  },
+  {
+    "query": "DB pool exhausted, connection refused on orders",
+    "expected_id": "INC-002"
+  },
+  {
+    "query": "401 unauthorized JWT validation failing after deploy",
+    "expected_id": "INC-003"
+  },
+  {
+    "query": "Java heap space OutOfMemoryError when generating large report",
+    "expected_id": "INC-004"
+  },
+  {
+    "query": "Cannot read property map of undefined React product list",
+    "expected_id": "INC-005"
+  },
+  {
+    "query": "Kafka consumer lag spike inventory topic GC pause",
+    "expected_id": "INC-006"
+  },
+  {
+    "query": "SSL handshake failure calling shipping vendor API",
+    "expected_id": "INC-007"
+  },
+  {
+    "query": "duplicate key on orders primary key during retry",
+    "expected_id": "INC-008"
+  },
+  {
+    "query": "Redis maxmemory exceeded session cache OOM",
+    "expected_id": "INC-009"
+  },
+  {
+    "query": "504 gateway timeout search endpoint elasticsearch slow",
+    "expected_id": "INC-010"
+  },
+  {
+    "query": "CORS blocked from app subdomain to api",
+    "expected_id": "INC-011"
+  },
+  {
+    "query": "disk full on logging node, log rotation failed",
+    "expected_id": "INC-012"
+  }
+]

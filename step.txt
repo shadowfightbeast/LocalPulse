@@ -1,0 +1,104 @@
+# 🚀 Project Roadmap: Context-Aware Incident Debugging Assistant
+
+## 💡 The Problem
+Engineers waste hours digging through messy logs, fragmented dashboards, Slack threads, and outdated documentation during active incidents.
+
+## 🎯 The Vision
+Build a **Retrieval-Augmented Generation (RAG)** system that:
+1. **Ingests:** Error snippets or log files.
+2. **Retrieves:** Similar past incidents, relevant runbooks, and code documentation.
+3. **Generates:** Actionable debugging steps and root cause analysis.
+
+### ✨ Unique Value Propostion
+* **Multi-Source Retrieval:** Beyond just docs—indexes chat history and logs.
+* **Semantic Error Matching:** Understands that "NullPointer" and "dereference error" are related.
+* **Intelligent Ranking:** Weights results by similarity, recency, and confidence.
+
+---
+
+## 🏗️ Phase-by-Phase Implementation
+
+### 🧱 Phase 0: Scope & Data Definition
+*   **Goal:** Define the MVP and prepare initial data.
+*   **Action:** Create a dataset of 20–50 incident reports.
+*   **Data Format:**
+    ```json
+    {
+      "error": "NullPointerException in payment service",
+      "root_cause": "Missing null check",
+      "fix": "Add null validation before processing",
+      "tags": ["backend", "java"]
+    }
+    ```
+
+### ⚙️ Phase 1: Core RAG Pipeline (MVP)
+*   **Goal:** Establish a working "Query → Retrieve → Answer" loop.
+*   **Stack:** 
+    *   **Embeddings:** `SentenceTransformers` (`all-MiniLM-L6-v2`)
+    *   **Vector DB:** `FAISS` (Local, high performance)
+    *   **LLM:** Ollama (Local Llama 3.1) or OpenAI API.
+*   **Prompting:** Context-injected prompts for root cause analysis.
+
+### 🧠 Phase 2: Retrieval Optimization
+*   **Hybrid Search:** Combine semantic search (vector) with keyword search (BM25).
+*   **Weighted Retrieval:** Give higher priority to error type matches over general text similarity.
+*   **Better Chunking:** Separate error signatures from remediation steps.
+
+### 📄 Phase 3: Log Parsing & Structuring
+*   **Goal:** Move from raw text logs to structured signals.
+*   **Action:** Parse messy logs into JSON:
+    ```json
+    {
+      "service": "PaymentService",
+      "error_type": "NullPointerException",
+      "line": 45,
+      "severity": "ERROR"
+    }
+    ```
+
+### 🧮 Phase 4: Scoring & Confidence
+*   **Ranking Formula:**
+    `score = (0.6 * similarity) + (0.2 * tag_match) + (0.2 * recency)`
+*   **Confidence Scores:** Display how certain the system is about the match.
+
+### 💬 Phase 5: Multi-Source Expansion
+*   **Sources:** Index Markdown runbooks, simulated Slack conversations, and internal API docs.
+*   **Result:** A "Global Search" that answers questions like "How did we fix the last DB timeout?"
+
+### 🖥️ Phase 6: UI (Demo Ready)
+*   **Framework:** Streamlit for a fast, interactive dashboard.
+*   **Features:** Paste log area, similarity visualization, and step-by-step fix guides.
+
+### 🧪 Phase 7: Evaluation (The "Pro" Layer)
+*   **Metrics:** Measure Top-k retrieval success and answer relevance.
+*   **Testing:** Build a "Golden Set" of errors to benchmark against.
+
+---
+
+## 🧩 Final Architecture
+```mermaid
+graph TD
+    A[User Input: Log Snippet] --> B[Log Parser]
+    B --> C[Embedding Model]
+    C --> D[Vector DB: FAISS]
+    D --> E[Retriever: Hybrid + Ranking]
+    E --> F[LLM: Answer Generation]
+    F --> G[Output: Fix + Confidence]
+```
+
+---
+
+## ✅ Current Status & Next Steps
+
+1.  **Environment:** 
+    *   [ ] Fix Ollama installation.
+    *   [ ] Install `requirements.txt` (Note: switched to `faiss-cpu`).
+2.  **Implementation:**
+    *   [ ] Build `src/embedder.py` (Phase 1).
+    *   [ ] Create initial `data/incidents.json` (Phase 0).
+    *   [ ] Create first RAG script.
+
+**👉 Next Decision:**
+*   Are we proceeding with **Ollama (local)** or **OpenAI API**?
+*   Should we start by building the **Dataset (Phase 0)** or the **Pipeline (Phase 1)**?
+

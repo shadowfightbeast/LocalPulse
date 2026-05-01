@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+data/vector_store/
+*.faiss
+*.pkl
+.streamlit/secrets.toml
+.idea/
+.vscode/
+.claude/
