@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 from src.pipeline import answer
+from src.llm import unload
+from config import API_PORT
 import uvicorn
 
 app = FastAPI(title="Incident Debugging Assistant API")
@@ -64,5 +66,10 @@ async def diagnose(request: DiagnoseRequest):
 async def health():
     return {"status": "healthy"}
 
+@app.on_event("shutdown")
+def shutdown_event():
+    print("Shutting down... Unloading model to free resources.")
+    unload()
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=API_PORT)

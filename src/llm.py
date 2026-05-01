@@ -1,6 +1,6 @@
 """Phase 1: LLM answer generation. Provider-agnostic wrapper."""
 from typing import List, Dict
-from config import LLM_PROVIDER, LLM_MODEL, OPENAI_API_KEY, ANTHROPIC_API_KEY, OLLAMA_HOST
+from config import LLM_PROVIDER, LLM_MODEL, OPENAI_API_KEY, ANTHROPIC_API_KEY, OLLAMA_HOST, OLLAMA_KEEP_ALIVE
 
 
 PROMPT_TEMPLATE = """You are an incident debugging assistant. Use the past incidents below to suggest the likely root cause and fix for the user's error.
@@ -58,6 +58,7 @@ def generate(query: str, retrieved: List[Dict]) -> str:
             "model": LLM_MODEL,
             "messages": [{"role": "user", "content": prompt}],
             "stream": False,
+            "keep_alive": OLLAMA_KEEP_ALIVE,
         }
         resp = httpx.post(
             f"{OLLAMA_HOST}/api/chat",
@@ -69,3 +70,20 @@ def generate(query: str, retrieved: List[Dict]) -> str:
         return resp.json()["message"]["content"]
 
     raise NotImplementedError(f"Provider {LLM_PROVIDER} not supported")
+
+
+def unload():
+    """Explicitly unload the model from memory (Ollama only)."""
+    if LLM_PROVIDER == "ollama":
+        import httpx
+        try:
+            # Setting keep_alive to 0 tells Ollama to unload the model immediately
+            httpx.post(
+                f"{OLLAMA_HOST}/api/chat",
+                json={"model": LLM_MODEL, "messages": [], "keep_alive": 0},
+                timeout=5.0,
+            )
+            return True
+        except Exception as e:
+            print(f"Failed to unload Ollama model: {e}")
+    return False

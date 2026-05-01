@@ -20,3 +20,8 @@ EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 
 VECTOR_DB = os.getenv("VECTOR_DB", "faiss")
 TOP_K = int(os.getenv("TOP_K", "3"))
+
+# Ollama specific settings
+OLLAMA_KEEP_ALIVE = os.getenv("OLLAMA_KEEP_ALIVE", "5m")  # Model stays in memory for 5 mins
+
+API_PORT = int(os.getenv("API_PORT", "8000"))
