@@ -10,12 +10,14 @@ export default function Header() {
             <ShieldCheck className="w-6 h-6 text-primary" />
           </div>
           <div>
-            <h1 className="font-bold text-lg tracking-tight">Incident Intelligence</h1>
-            <p className="text-xs text-slate-500 font-medium uppercase tracking-widest">RAG Analysis Engine</p>
+            <h1 clasName="font-bold text-lg tracking-tight">Incident Intelligence</h1>
+            <p className="text-xs text-slate-500 font-medium uppercase tracking-widest">RAG Analysis
+              Engine</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-white/5 text-xs font-medium">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border      
+  border-white/5 text-xs font-medium">
             <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
             Engine Online
           </div>

@@ -1,0 +1,74 @@
+[
+  {
+    "query": "ERROR PaymentService NullPointerException at processPayment line 45",
+    "expected_id": "INC-001",
+    "expected_keywords": ["null", "user", "validation", "payment"],
+    "expected_fix_keywords": ["null check", "validation", "guest", "login"]
+  },
+  {
+    "query": "Connection refused DB pool exhausted on OrderService after 5000ms",
+    "expected_id": "INC-002",
+    "expected_keywords": ["pool", "connection", "query", "timeout"],
+    "expected_fix_keywords": ["pool size", "timeout", "query"]
+  },
+  {
+    "query": "401 Unauthorized JWT token validation failed after deploy",
+    "expected_id": "INC-003",
+    "expected_keywords": ["jwt", "token", "secret", "auth"],
+    "expected_fix_keywords": ["secret", "restart", "expiry", "rollout"]
+  },
+  {
+    "query": "OutOfMemoryError Java heap space while generating report",
+    "expected_id": "INC-004",
+    "expected_keywords": ["memory", "heap", "jvm", "report"],
+    "expected_fix_keywords": ["heap", "xmx", "stream", "pagination"]
+  },
+  {
+    "query": "TypeError Cannot read properties of undefined reading map in React",
+    "expected_id": "INC-005",
+    "expected_keywords": ["undefined", "null", "map", "array"],
+    "expected_fix_keywords": ["optional chaining", "null check", "loading", "array"]
+  },
+  {
+    "query": "Kafka consumer lag spike GC overhead limit exceeded inventory topic",
+    "expected_id": "INC-006",
+    "expected_keywords": ["kafka", "consumer", "lag", "gc"],
+    "expected_fix_keywords": ["heap", "gc", "pause", "consumer"]
+  },
+  {
+    "query": "SSL handshake failure PKIX certificate expired calling shipping API",
+    "expected_id": "INC-007",
+    "expected_keywords": ["ssl", "certificate", "expired", "tls"],
+    "expected_fix_keywords": ["certificate", "renew", "truststore", "ssl"]
+  },
+  {
+    "query": "duplicate key value violates unique constraint orders_pkey retry",
+    "expected_id": "INC-008",
+    "expected_keywords": ["duplicate", "idempotency", "key", "retry"],
+    "expected_fix_keywords": ["idempotency", "key", "duplicate", "check"]
+  },
+  {
+    "query": "Redis maxmemory exceeded OOM session cache evicting keys",
+    "expected_id": "INC-009",
+    "expected_keywords": ["redis", "memory", "evict", "session"],
+    "expected_fix_keywords": ["maxmemory", "eviction", "ttl", "redis"]
+  },
+  {
+    "query": "504 gateway timeout search endpoint elasticsearch not responding",
+    "expected_id": "INC-010",
+    "expected_keywords": ["timeout", "elasticsearch", "search", "gateway"],
+    "expected_fix_keywords": ["timeout", "replica", "elasticsearch", "index"]
+  },
+  {
+    "query": "CORS policy blocked request from app subdomain to api domain",
+    "expected_id": "INC-011",
+    "expected_keywords": ["cors", "origin", "header", "blocked"],
+    "expected_fix_keywords": ["cors", "origin", "allowlist", "header"]
+  },
+  {
+    "query": "disk full no space left on device log shipping halted",
+    "expected_id": "INC-012",
+    "expected_keywords": ["disk", "space", "log", "full"],
+    "expected_fix_keywords": ["disk", "rotation", "archive", "cleanup"]
+  }
+]

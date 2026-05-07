@@ -34,3 +34,9 @@ class FaissStore:
     def search(self, query_vec: np.ndarray, top_k: int = 3) -> List[Tuple[Dict, float]]:
         distances, indices = self.index.search(query_vec, top_k)
         return [(self.metadata[i], float(d)) for i, d in zip(indices[0], distances[0])]
+
+    def add_incident(self, vector: np.ndarray, incident: Dict, path: Path = VECTOR_DB_PATH) -> None:
+        """Add a single new incident to the live index and persist to disk."""
+        self.index.add(vector)
+        self.metadata.append(incident)
+        self.save(path)

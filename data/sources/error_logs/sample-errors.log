@@ -1,0 +1,12 @@
+2025-11-01 09:12:33 ERROR PaymentService NullPointerException at processPayment line 45 - user=null order=ORD-9921
+2025-11-01 09:14:01 ERROR OrderService HikariPool-1 - Connection is not available, request timed out after 5000ms
+2025-11-01 10:02:44 ERROR AuthService JWT token validation failed - signature does not match locally computed signature
+2025-11-02 14:33:10 FATAL JvmReportService java.lang.OutOfMemoryError: Java heap space at ReportGenerator.generate(line 210)
+2025-11-03 08:55:21 ERROR FrontendApp TypeError: Cannot read properties of undefined (reading 'map') at ProductList.jsx:34
+2025-11-03 11:10:09 WARN InventoryConsumer GC overhead limit exceeded - consumer lag=45000 topic=inventory-updates
+2025-11-04 16:22:55 ERROR ShippingClient javax.net.ssl.SSLHandshakeException: PKIX path building failed - certificate expired
+2025-11-05 09:01:12 ERROR OrderService duplicate key value violates unique constraint orders_pkey - idempotency failure on retry
+2025-11-06 13:44:30 ERROR SessionService RedisCommandTimeoutException: Command timed out - maxmemory policy evicting keys
+2025-11-07 10:30:05 ERROR SearchService Gateway Timeout 504 - ElasticsearchService not responding after 30s
+2025-11-08 07:18:42 ERROR APIGateway CORS policy blocked request from app.company.com to api.company.com
+2025-11-09 02:05:11 ERROR LogShipper No space left on device - /var/log/app disk usage 98%
